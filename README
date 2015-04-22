@@ -1,7 +1,8 @@
-README
---
+# othello-agent
 
-To get started with this assignment, three different agents have already been implemented in the '~cs4701/Project2/engines' directory:
+This was an assignment for the artificial intelligence course at Columbia University. The assignment was to take skeleton code for the game Othello, and create a rational agent to play the game and beat the random player, greedy player, as well as other students, using the minimax algorithm, as well as alpha-beta pruning.
+
+To get started with this assignment, three different agents have already been implemented:
 
 * human: read user input to get the move to make
 * random: play completely randomly
@@ -9,11 +10,15 @@ To get started with this assignment, three different agents have already been im
 
 The game allows for two of these implementations to play against each other. To start an Othello game, you can run:
 
-    $ python ~cs4701/Project2/othello.py [-aB] [-aW] [-t T] [-v] black_engine white_engine
+    $ python othello.py [-aB] [-aW] [-t T] [-v] black_engine white_engine
 
 where black_engine and white_engine are one of the above agents. For example:
 
-    $ python ~cs4701/Project2/othello.py [-aB] [-aW] [-t T] [-v] human greedy
+    $ python othello.py [-aB] [-aW] [-t T] [-v] human greedy
+    
+To play with the rational agent (sks2187.py) using alpha-beta pruning run:
+    
+    $ python othello.py -aW -v random sks2187
 
 When using the student agent, the alpha-beta pruning of the black and white engines is turned on by using the -aB and -aW options. 
 
@@ -23,4 +28,4 @@ The -v option allows you to increase the verbosity of the game (display the boar
 
 You can also get helpful messages by typing:
 
-    $ python ~cs4701/Project2/othello.py -h
+    $ python othello.py -h
