@@ -1,0 +1,78 @@
+Serena Simkus
+sks2187
+COMS 4701
+Assignment 2: Othello
+
+Part II: Comparison of your implementations
+
+Minimax player:
+1. The number of nodes generated
+To track this I made a global counter to keep track of the number of nodes generated, initializing it to 1 for the root node, and then incrementing it by the length of get_legal_moves every time get_legal_moves is called, because that is how many nodes are generated. I printed this value every move and take the latest value (last printed) as the total number of nodes generated, and then I averaged this. I ran 6 tests for each algorithm/depth. Clearly Alpha-beta generates way less nodes than minimax, which makes sense because after some nodes are pruned off, their children don't need to be generated, and this accounts for the gap in the number of nodes generated for minimax and alpha-beta at the same depth. For all tests I ran the engines (random sks2187) with 60 seconds.
+
+Minimax:			Alpha-beta depth 3 & 4:		Alpha-beta depth 2:
+19613				42652						4662
+27651				42893						4370
+16723				29054						4196
+35410				26483						3823
+21366				29417						5424
+24049				36101						5641
+
+Avg: 24,135 		Avg: 30,020					Avg: 4686
+
+There were more nodes duplicated with alpha-beta originally because alpha-beta goes one to two levels deeper on each iteration. Once I realized this I decided to re-run this experiment and set the alpha-beta depth to be the same as the minimax (depth 2), and after this the average number of duplicated nodes was much lower than the number for minimax. 
+
+
+2. The number of nodes duplicated (containing states that were generated previously)
+To track this I decided to keep track of each board as a string, and then I created a dictionary of the boards, with the board as the key and a number as the value. Every time the board I was currently looking at was already in the dictionary, I incremented the value, and when the board wasn't already there I added it. At the end I added up the total number of duplicated boards by summing the counts > 1, and taking the last value returned from this. I did this for 10 games and averaged the values for both minimax, and alpha-beta. For all tests I ran the engines (random sks2187) with 60 seconds. Alpha-beta seems to generate less duplicated nodes, but a lot of the disparity between the values for minimax vs. alpha-beta at the same depth comes from the fact that alpha-beta simply generates less nodes than minimax always. Alpha-beta still generates less duplicated nodes than minimax (from looking at the ratios of the duplicated nodes to the generated nodes), which is probably because many of the pruned nodes contained duplicates. 
+
+Minimax:			Alpha-beta depth 3 & 4:		Alpha-beta depth 2:
+18842				17517						1481
+19681				28490						1415
+11084				28495						1526
+24514				13424						1283
+16042				23722						1021
+17573				24481						1459
+26602				14425						1296
+26643				16515						1856
+19574				26937						1335
+35769				23036						2134
+
+Avg: 21,632 		Avg: 21,704					Avg: 1481
+
+
+3. The average branching factor of the search tree
+To track this value I used the number of nodes generated (from the first experiment), but also kept track of the number of 'elements', which was a variable that I incremented every time get_legal_moves was called, because every time that function was called I was looking at a new element, or node that branched. The average branching factor is the total number of nodes, divided by the number of elements that 'branch' (that call get_legal_moves). As expected, the value is quite similar across all algorithms/depths, because the branching factor is more dependent on the game than on the algorithm. The branching factor I got for the game was around 8 or 9, which seems reasonable to me because it seems like averaged over the game any player would have 8 or 9 moves available each time. I also printed out the number of available moves for each turn to decide at how many moves I should go to a smaller depth, and from that I saw that 8 or 9 seems like a reasonable branching factor. For all tests I ran the engines (random sks2187) with 60 seconds.
+
+Minimax:			Alpha-beta depth 3 & 4:		Alpha-beta depth 2:
+8.84955199			8.37950721154				8.10554561717
+10.3521166246		9.80141843972				9.20816326531
+11.2384396797		7.69005270092				9.0987654321
+9.64015766288		8.81146025878				8.50293542074
+6.07142857143		9.62551086255				7.92242833052
+11.2020530796		8.49371859296				7.97122302158
+
+Avg: 9.559			Avg: 8.800					Avg: 8.468
+
+
+4. The runtime of the algorithm to explore the tree up to a depth of D, for different values of D
+To track this I started a timer at the beginning of each move, and then right before returning the move, I end the timer and calculate the elapsed time. I append this total time for the move to the total time for all moves, which is then divided by the number of moves, giving the average time per move for that game. It prints out the average as it calculates it after each move, but only the last value printed is the actual average time per move for the entire game. Again for all tests I ran the engines (random sks2187), and I did 60 seconds for minimax depth 2 and all alpha-beta trials, but had to increase the time for minimax with higher depths. For depth 3 and 4 I ran minimax with 600 seconds, and it still ran out of time for depth 4 (hence the +). I did three tests per algorithm per depth, and averaged these for comparisons. Alpha-beta was always less than minimax, and becomes even more significantly less the more the depth is increased. This difference makes sense as alpha-beta prunes away part of the tree and explores significantly less nodes, which makes it a lot faster. 
+
+Depth:			Minimax:			Alpha-beta:
+2 				0.58745660453		0.0792301019033
+				0.749093696989		0.140178137812
+				0.689018070698		0.172268431762
+
+		avg:	0.675				0.131
+
+3 				10.544229491		0.769695191548
+				10.5965583078		1.27068589528
+				9.93822553328		1.32076149973
+
+		avg:	10.360				1.120
+
+4 				20.5858798603+		0.448016842206
+				21.3250347206+		0.599156528711
+				20.5823128552+		0.765681340777
+
+		avg:	20.831+				0.604
+
